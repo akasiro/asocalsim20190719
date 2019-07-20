@@ -14,7 +14,7 @@ class tfidfmodel_cal():
 
     def cal_tfidf(self, textlist, typecode):
         new_vec = self.dictionary.doc2bow(textlist)
-        sim = self.index[self.tfidf[textlist]]
+        sim = self.index[self.tfidf[new_vec]]
         return sim[typecode]
 
 if __name__ == '__main__':
