@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import joblib,sqlite3,os
 from cal_tfidf import *
 
@@ -124,7 +125,7 @@ class aso_calsim():
                     try:
                         textlist = dict_appleid_text[appleid]
                         tempsim = tfidf_model.cal_tfidf(textlist,dict_idinsim_typecode[type_code])
-                        if tempsim == 0:
+                        if tempsim == 0 or tempsim == np.nan:
                             continue
                         dict_id_diff[appleid] = 1 - tempsim
                     except:
@@ -174,7 +175,7 @@ class aso_calsim():
                     try:
                         textlist = dict_appleid_text[appleid]
                         tempsim = tfidf_model.cal_tfidf(textlist)
-                        if tempsim == 0:
+                        if tempsim == 0 or tempsim == np.nan:
                             continue
                         dict_id_diff[appleid] = 1 - tempsim
                     except:
