@@ -132,7 +132,7 @@ class aso_calsim():
                         continue
             # 将结果转化为dataframe
             if exemplar:
-                column_name = 'diff_e'
+                column_name = 'diff_e_f'
             else:
                 column_name = 'diff_p_f'
             tempdf = pd.DataFrame({'appleid':[k for k in dict_id_diff], column_name:[dict_id_diff[k] for k in dict_id_diff]})
@@ -145,7 +145,7 @@ class aso_calsim():
 
 
 
-    def cal_tfidf2(self):
+    def cal_tfidf2(self, exemplar = False):
         '''
         将一个category的所有的文本视为corpus，将该游戏与category中的每个游戏的文本分别比较，将最大相似度视为相似度
         :return:
@@ -159,8 +159,11 @@ class aso_calsim():
             for type_code in self.dict_type_code_id:
                 templist = self.dict_type_code_id[type_code]
                 # 构造baselistoftextlist
-                baselistoftextlist = []
+                baselistoftextlist = [[]]
                 for appleid in templist:
+                    if exemplar:
+                        if appleid not in self.exemplarlist:
+                            continue
                     try:
                         baselistoftextlist.append(dict_appleid_text[appleid])
                     except:
@@ -172,6 +175,9 @@ class aso_calsim():
                     continue
                 # 计算每个id的战略差异
                 for appleid in templist:
+                    if exemplar:
+                        if appleid in self.exemplarlist:
+                            continue
                     try:
                         textlist = dict_appleid_text[appleid]
                         tempsim = tfidf_model.cal_tfidf(textlist)
@@ -181,7 +187,11 @@ class aso_calsim():
                     except:
                         continue
             # 将结果转化为dataframe
-            tempdf = pd.DataFrame({'appleid': [k for k in dict_id_diff], 'diff_p_max': [dict_id_diff[k] for k in dict_id_diff]})
+            if exemplar:
+                column_name = 'diff_e_max'
+            else:
+                column_name = 'diff_p_max'
+            tempdf = pd.DataFrame({'appleid': [k for k in dict_id_diff], column_name: [dict_id_diff[k] for k in dict_id_diff]})
             tempdf['date'] = date
             tempdf['timestamp'] = self.dict_time[date]
             df = df.append(tempdf, ignore_index=True)
@@ -194,6 +204,8 @@ class aso_calsim():
         if self.exemplarlist != None:
             df3 = self.cal_tfidf1(exemplar=True)
             tempdf = tempdf.merge(df3, on = ['appleid','date','timestamp'], how = 'outer')
+            df4 = self.cal_tfidf2(exemplar=True)
+            tempdf = tempdf.merge(df4, on = ['appleid','date','timestamp'], how = 'outer')
         return tempdf
 
 if __name__ == '__main__':

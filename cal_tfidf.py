@@ -31,8 +31,10 @@ if __name__ == '__main__':
     text2 = '北方人流浪到南方'
     text2 = ''
     texts = [text1, text2]
+    texts = [text1,'']
     keyword = '无痛人流并非无痛'
     texts = [jieba.lcut(text) for text in texts]
+    texts = [jieba.lcut(text1),[]]
 
     new_vec = jieba.lcut(keyword)
 
