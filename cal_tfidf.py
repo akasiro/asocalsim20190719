@@ -12,10 +12,14 @@ class tfidfmodel_cal():
         self.tfidf = TfidfModel(self.corpus)
         self.index = SparseMatrixSimilarity(self.tfidf[self.corpus], self.num_features)
 
-    def cal_tfidf(self, textlist, typecode):
+    def cal_tfidf(self, textlist, typecode = False):
         new_vec = self.dictionary.doc2bow(textlist)
         sim = self.index[self.tfidf[new_vec]]
-        return sim[typecode]
+        if typecode == False:
+            return sim[typecode]
+        else:
+            simlist = [i for i in sim]
+            return max(simlist)
 
 if __name__ == '__main__':
     text1 = '无痛人流并非无痛'
@@ -28,4 +32,5 @@ if __name__ == '__main__':
     m = tfidfmodel_cal(texts)
     print(m.cal_tfidf(new_vec,0))
     print(m.cal_tfidf(new_vec, 1))
+    print(m.cal_tfidf(new_vec))
 
