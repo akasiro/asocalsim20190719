@@ -206,6 +206,7 @@ class aso_calsim():
             tempdf = tempdf.merge(df3, on = ['appleid','date','timestamp'], how = 'outer')
             df4 = self.cal_tfidf2(exemplar=True)
             tempdf = tempdf.merge(df4, on = ['appleid','date','timestamp'], how = 'outer')
+        tempdf = tempdf.merge(self.df_type_id,on = 'appleid')
         return tempdf
 
 if __name__ == '__main__':
