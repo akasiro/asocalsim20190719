@@ -16,10 +16,11 @@ class tfidfmodel_cal():
         new_vec = self.dictionary.doc2bow(textlist)
         sim = self.index[self.tfidf[new_vec]]
         if typecode == False:
-            return sim[typecode]
-        else:
             simlist = [i for i in sim]
             return max(simlist)
+        else:
+            return sim[typecode]
+            
 
 if __name__ == '__main__':
     text1 = '无痛人流并非无痛'
